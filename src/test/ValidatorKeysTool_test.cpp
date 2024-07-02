@@ -19,10 +19,11 @@
 
 #include <ValidatorKeys.h>
 #include <ValidatorKeysTool.h>
+
 #include <test/KeyFileGuard.h>
 
-#include <ripple/basics/base64.h>
-#include <ripple/protocol/SecretKey.h>
+#include <xrpl/basics/base64.h>
+#include <xrpl/protocol/SecretKey.h>
 
 namespace ripple {
 

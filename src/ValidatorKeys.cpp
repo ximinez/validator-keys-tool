@@ -20,17 +20,19 @@
 
 #include <ValidatorKeys.h>
 
-#include <ripple/basics/StringUtilities.h>
-#include <ripple/basics/base64.h>
-#include <ripple/json/json_reader.h>
-#include <ripple/json/to_string.h>
-#include <ripple/protocol/HashPrefix.h>
-#include <ripple/protocol/Serializer.h>
-#include <ripple/protocol/Sign.h>
+#include <xrpl/basics/StringUtilities.h>
+#include <xrpl/basics/base64.h>
+#include <xrpl/json/json_reader.h>
+#include <xrpl/json/to_string.h>
+#include <xrpl/protocol/HashPrefix.h>
+#include <xrpl/protocol/Serializer.h>
+#include <xrpl/protocol/Sign.h>
+
 #include <boost/algorithm/clamp.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
+
 #include <fstream>
 
 namespace ripple {
