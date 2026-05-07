@@ -1,23 +1,3 @@
-//------------------------------------------------------------------------------
-/*
-    This file is part of validator-keys-tool:
-        https://github.com/ripple/validator-keys-tool
-    Copyright (c) 2016 Ripple Labs Inc.
-
-    Permission to use, copy, modify, and/or distribute this software for any
-    purpose  with  or without fee is hereby granted, provided that the above
-    copyright notice and this permission notice appear in all copies.
-
-    THE  SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-    WITH  REGARD  TO  THIS  SOFTWARE  INCLUDING  ALL  IMPLIED  WARRANTIES  OF
-    MERCHANTABILITY  AND  FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-    ANY  SPECIAL ,  DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-    WHATSOEVER  RESULTING  FROM  LOSS  OF USE, DATA OR PROFITS, WHETHER IN AN
-    ACTION  OF  CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
-//==============================================================================
-
 #include <ValidatorKeys.h>
 
 #include <xrpl/basics/StringUtilities.h>
@@ -35,7 +15,7 @@
 
 #include <fstream>
 
-namespace ripple {
+namespace xrpl {
 
 std::string
 ValidatorToken::toString() const
@@ -44,7 +24,7 @@ ValidatorToken::toString() const
     jv["validation_secret_key"] = strHex(secretKey);
     jv["manifest"] = manifest;
 
-    return ripple::base64_encode(to_string(jv));
+    return xrpl::base64_encode(to_string(jv));
 }
 
 ValidatorKeys::ValidatorKeys(KeyType const& keyType)
@@ -364,18 +344,14 @@ ValidatorKeys::createValidatorToken(KeyType const& keyType)
     STObject st = generatePartialManifest(
         tokenSequence_, keys_.publicKey, tokenPublic, domain_);
 
-    ripple::sign(st, HashPrefix::manifest, keyType, tokenSecret);
-    ripple::sign(
-        st,
-        HashPrefix::manifest,
-        keyType_,
-        *keys_.secretKey,
-        sfMasterSignature);
+    xrpl::sign(st, HashPrefix::manifest, keyType, tokenSecret);
+    xrpl::sign(
+        st, HashPrefix::manifest, keyType_, *keys_.secretKey, sfMasterSignature);
 
     setManifest(st);
 
     return ValidatorToken{
-        ripple::base64_encode(manifest_.data(), manifest_.size()), tokenSecret};
+        xrpl::base64_encode(manifest_.data(), manifest_.size()), tokenSecret};
 }
 
 boost::optional<std::string>
@@ -426,7 +402,7 @@ ValidatorKeys::finishToken(Blob const& masterSig)
     setManifest(st);
 
     return ValidatorToken{
-        ripple::base64_encode(manifest_.data(), manifest_.size()), tokenSecret};
+        xrpl::base64_encode(manifest_.data(), manifest_.size()), tokenSecret};
 }
 
 std::string
@@ -441,7 +417,7 @@ ValidatorKeys::revoke()
 
     STObject st = generatePartialRevocation(keys_.publicKey);
 
-    ripple::sign(
+    xrpl::sign(
         st,
         HashPrefix::manifest,
         keyType_,
@@ -450,7 +426,7 @@ ValidatorKeys::revoke()
 
     setManifest(st);
 
-    return ripple::base64_encode(manifest_.data(), manifest_.size());
+    return xrpl::base64_encode(manifest_.data(), manifest_.size());
 }
 
 std::string
@@ -481,7 +457,7 @@ ValidatorKeys::finishRevoke(Blob const& masterSig)
 
     setManifest(st);
 
-    return ripple::base64_encode(manifest_.data(), manifest_.size());
+    return xrpl::base64_encode(manifest_.data(), manifest_.size());
 }
 
 void
@@ -523,7 +499,7 @@ ValidatorKeys::signHex(std::string data) const
     if (!blob)
         throw std::runtime_error("Could not decode hex string: " + data);
     return strHex(
-        ripple::sign(keys_.publicKey, *keys_.secretKey, makeSlice(*blob)));
+        xrpl::sign(keys_.publicKey, *keys_.secretKey, makeSlice(*blob)));
 }
 
 void
@@ -564,4 +540,4 @@ ValidatorKeys::domain(std::string d)
     domain_ = std::move(d);
 }
 
-}  // namespace ripple
+}  // namespace xrpl
